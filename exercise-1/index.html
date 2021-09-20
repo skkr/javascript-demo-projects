@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <main id="content">
+
+    <div class="container">
+
+      <header>
+        <h1>Users</h1>
+      </header>
+
+      <article id="users-list">
+      </article>
+
+    </div>
+
+  </main>
+
+  <!--Template -->
+  <script id="introduction-template" type="text/x-handlebars-template">
+
+      <ul class="list-unstyled">
+        {{#each data}}
+          <li class="user fade-in" id="user-{{this.id}}">
+
+            <div class="user-info">
+
+              <div class="user-info__basic-data">
+                <dl>
+                  <dt class="u-hidden">Avatar</dt>
+                  <dd><img src="{{this.avatar}}" alt="{{this.name}} avatar" class="avatar fade-in" onerror="setDefaultAvatar(this)"></dd>
+                  <dt class="u-hidden">Name</dt>
+                  <dd>{{this.name}}</dd>
+                </dl>
+              </div>
+
+              <button class="btn-toggle" type="button" onclick="viewMore({{this.id}})">Show additional data</button>
+
+              <div class="user-info__extended-data js-isHidden swing-in-top-fwd">
+                <h4>Aditional information</h4>
+                <dl>
+                  <dt>Creation date</dt>
+                  <dd>{{this.createdAt}}</dd>
+                  <dt>ID</dt>
+                  <dd>{{this.id}}</dd>
+                </dl>
+              </div>
+
+            </div>
+
+          </li>
+        {{/each}}
+      </ul>
+
+  </script>
+
+  <script src="js/custom.js"></script>
+
+  <script>
+    // Set handlebars template
+    const template = document.querySelector('#introduction-template').innerHTML;
+    const compile = Handlebars.compile(template);
+
+    // Request data
+    fetchData(URL);
+  </script>
+
+</body>
+</html>
