@@ -1,10 +1,5 @@
 # JavaScript Demo Projects
 
-***
-
-## Exercise 1: Consuming RESTful API data
-
-***
-
-## Exercise 2: Task Tracker
+1) Exercise 1: Consuming RESTful API data
+2) Exercise 2: Task Tracker Enhancement
 
