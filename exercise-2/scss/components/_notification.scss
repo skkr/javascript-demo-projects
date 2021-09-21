@@ -1,0 +1,29 @@
+.notification {
+  position: fixed;
+  left: $spacer;
+  top: $spacer;
+  right: $spacer;
+  padding: $spacer;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0,0,0,.3);
+
+  @extend .slide-bottom;
+
+  color: $color-darkgray;
+  background: $color-lightgray;
+
+  &--error {
+    color: $color-white;
+    background: $color-orangered;
+  }
+
+  &--success {
+    color: $color-white;
+    background: $color-green;
+  }
+
+  @media (min-width: 480px) {
+    left: auto;
+  }
+
+}
