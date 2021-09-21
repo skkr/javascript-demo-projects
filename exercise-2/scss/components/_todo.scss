@@ -1,0 +1,112 @@
+#todo-app {
+
+  .container &:first-child {padding-top: 8vw;}
+
+  section {
+    margin-bottom: $spacer-lg;
+  }
+
+  .tasks-list {
+    padding: 0;
+    list-style: none;
+    min-height: $spacer-lg;
+  }
+
+  .task {
+    display: flex;
+
+    margin-bottom: $spacer;
+
+    &:not(:last-child) {
+      margin-bottom: $spacer-sm;
+      padding-bottom: $spacer-sm;
+      border-bottom: 1px solid $color-lightgray;
+    }
+
+    * {
+      margin-bottom: 0;
+
+      &:not(input[type="checkbox"]) {
+        min-height: $spacer-md;
+      }
+      &:not(:first-child),
+      input[type="checkbox"] + label {
+        margin-left: $spacer-sm;
+      }
+    }
+  }
+
+  .task-item {
+    display: flex;
+
+    &, input[type="text"] {
+      width: 100%;
+    }
+
+    label {
+      padding: $spacer-sm;
+      border: 1px solid transparent;
+      font-size: $fontSize-md;
+      @media (max-width: 279px) {
+        word-break: break-all;
+      }
+    }
+
+    input[type="checkbox"] {
+      position: relative;
+      top: $spacer-sm + ($spacer-sm / 2) ;
+    }
+  }
+
+  .task-actions {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+
+    @media (min-width: 275px) {
+      flex-direction: row;
+      width: auto;
+    }
+    @media (max-width: 375px) {
+      button:last-child {margin-left: 0;}
+    }
+  }
+
+
+  #create-task .task * {
+    min-height: $spacer-lg;
+  }
+  #incomplete-tasks,
+  #completed-tasks {
+    .task-item {
+      input[type="text"] {
+        display :none;
+      }
+    }
+
+    // JS RELATED
+
+    /* Edit Tasks */
+    .js-editMode {
+      .task-item {
+        input[type=text] {
+          display :block;
+        }
+        label {
+          display :none;
+          outline: 1px solid red;
+        }
+      }
+    }
+
+  }
+  // Completed Tasks
+  #completed-tasks {
+    label {
+      text-decoration: line-through;
+      opacity: .5;
+    }
+  }
+
+
+}

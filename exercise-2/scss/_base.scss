@@ -1,0 +1,63 @@
+// Titles
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-top: 0;
+  display: block;
+  margin-bottom: $spacer;
+  color: $color-darkgray;
+}
+h1,.h1 {
+  margin-bottom: $spacer-lg;
+  font-size: 40px;
+  color: $color-darkblue;
+  strong {
+    font-weight: 700;
+  }
+}
+h3,.h3 {
+  margin-bottom: $spacer;
+  padding-bottom: 10px;
+  border-bottom: 2px solid $color-darkgray;
+  font-weight: 700;
+  font-size: $fontSize-sm;
+  text-transform: uppercase;
+}
+
+input, button {
+  &:focus {
+    outline-color: $color-blue;
+  }
+}
+
+button {
+  min-width: 50px;
+  margin: 0;
+  border: 1px solid transparent;
+  color: $color-gray;
+  font-size: $fontSize-sm;
+  background: none;
+  border-radius: 6px;
+
+  &:focus,
+  &:hover {
+    color: $color-blue;
+    border: 1px solid $color-lightgray;
+  }
+  &.btn-delete:focus,
+  &.btn-delete:hover {
+    color: $color-orangered;
+  }
+}
+
+input[type="text"]  {
+  padding: $spacer-sm;
+  border: 1px solid $color-lightgray;
+  border-radius: 6px;
+  font-size: $fontSize-md;
+  color: #888;
+  background: $color-white;
+}
+
+input[type="text"] :focus {
+color: $color-darkgray;
+}

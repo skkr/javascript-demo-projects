@@ -1,0 +1,32 @@
+// ANIMATIONS
+
+.slide-bottom {
+	animation: slide-bottom 0.3s ease-out;
+}
+
+ @keyframes slide-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.fade-out {
+	animation: fade-out 0.2s ease-out;
+}
+
+ @keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}

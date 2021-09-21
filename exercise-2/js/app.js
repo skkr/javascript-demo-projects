@@ -1,92 +1,183 @@
-var taskInput = document.getElementById("new-task");
-var addButton = document.getElementsByTagName("button")[0];
-var incompleteTasksHolder = document.getElementById("incomplete-tasks");
-var completedTasksHolder = document.getElementById("completed-tasks");
+let appHolder = document.getElementById("todo-app");
+let taskInput = document.getElementById("new-task");
+let addTaskButton = document.getElementById("add-task");
+let incompleteTasksHolder = document.getElementById("incomplete-tasks");
+let completedTasksHolder = document.getElementById("completed-tasks");
 
-var createNewTaskElement = function(taskString, arr) {
-  listItem = document.createElement("li");
-  checkBox = document.createElement("input");
-  label = document.createElement("label");
-  editInput = document.createElement("input");
-  editButton = document.createElement("button");
-  deleteButton = document.createElement("button");
+function createNewTaskElement (taskString) {
+  let listItem = document.createElement("li");
+  listItem.className = 'task';
 
-  checkBox.type = "checkbox";
-  editInput.type = "text";
-  editButton.innerText = "Edit";
-  editButton.className = "edit";
-  deleteButton.innerText = "Delete";
-  deleteButton.className = "delete";
-  label.innerText = taskString;
+  let taskID = Math.floor(Math.random() * 1000000000).toString();
 
-  listItem.appendChild(checkBox);
-  listItem.appendChild(label);
-  listItem.appendChild(editInput);
-  listItem.appendChild(editButton);
-  listItem.appendChild(deleteButton);
+  let taskItem = `
+    <div class="task-item">
+    <input type="checkbox" id="task-${taskID}">
+    <label for="task-${taskID}">${taskString}</label>
+    <label for="task-${taskID}-input" class="u-hidden">${taskString}</label>
+    <input type="text" id="task-${taskID}-input" value="${taskString}">
+    </div>
+    <div class="task-actions">
+      <button class="btn-edit js-edit">Edit</button>
+      <button class="btn-delete js-delete">Delete</button>
+    </div>
+  `;
+
+  listItem.innerHTML = taskItem;
 
   return listItem;
 };
 
-var addTask = function () {
-  var listItemName = taskInput.value || "New Item"
-  listItem = createNewTaskElement(listItemName)
-  incompleteTasksHolder.appendChild(listItem)
-  bindTaskEvents(listItem, taskCompleted)
-  taskInput.value = "";
-};
 
-var editTask = function () {
-  var listItem = this.parentNode;
-  var editInput = listItem.querySelectorAll("input[type=text")[0];
-  var label = listItem.querySelector("label");
-  var button = listItem.getElementsByTagName("button")[0];
+function addTask () {
+  // Create a task based on the task dscription
+  let listItemName = taskInput.value;
 
-  var containsClass = listItem.classList.contains("editMode");
-  if (containsClass) {
-      label.innerText = editInput.value
-      button.innerText = "Edit";
+  // Make sure the user entered a description
+  if (listItemName.length > 0 ) {
+    listItem = createNewTaskElement(listItemName);
+    incompleteTasksHolder.appendChild(listItem);
+
+
+    bindTaskEvents(listItem, taskCompleted);
+    taskInput.value = "";
+
+    saveLocalData();
   } else {
-     editInput.value = label.innerText
-     button.innerText = "Save";
+    displayMessage('Please enter a task description', 'error');
   }
-  
-  listItem.classList.toggle("editMode");
 };
 
-var deleteTask = function (el) {
-  var listItem = this.parentNode;
-  var ul = listItem.parentNode;
+function editTask () {
+  let listItem = this.closest(".task");
+  let editInput = listItem.querySelector("input[type=text");
+  let label = listItem.querySelector("label");
+  let button = listItem.getElementsByTagName("button")[0];
+
+  let containsClass = listItem.classList.contains("js-editMode");
+  if (containsClass) {
+    label.innerText = editInput.value
+    button.innerText = "Edit";
+    setTimeout(() => {
+      saveLocalData();
+    }, 200);
+  } else {
+    editInput.value = label.innerText
+    button.innerText = "Save";
+  }
+
+  listItem.classList.toggle("js-editMode");
+};
+
+function deleteTask () {
+  let listItem = this.closest(".task");
+  let ul = listItem.parentNode;
   ul.removeChild(listItem);
+
+  if (incompleteTasksHolder.childElementCount == 0) {
+    displayMessage("All done!", "success");
+  }
+
+  saveLocalData();
+
 };
 
-var taskCompleted = function (el) {
-  var listItem = this.parentNode;
+function taskCompleted () {
+  let listItem = this.closest(".task");
+  let ul = listItem.parentNode;
   completedTasksHolder.appendChild(listItem);
   bindTaskEvents(listItem, taskIncomplete);
+
+  if (incompleteTasksHolder.childElementCount == 0) {
+    displayMessage("All done!", "success");
+  }
+
+  saveLocalData();
 };
 
-var taskIncomplete = function() {
-  var listItem = this.parentNode;
+function taskIncomplete () {
+  let listItem = this.closest(".task");
   incompleteTasksHolder.appendChild(listItem);
   bindTaskEvents(listItem, taskCompleted);
+
+  saveLocalData();
 };
 
-var bindTaskEvents = function(taskListItem, checkBoxEventHandler, cb) {
-  var checkBox = taskListItem.querySelectorAll("input[type=checkbox]")[0];
-  var editButton = taskListItem.querySelectorAll("button.edit")[0];
-  var deleteButton = taskListItem.querySelectorAll("button.delete")[0];
+function bindTaskEvents (taskListItem, checkBoxEventHandler) {
+  let checkBox = taskListItem.querySelectorAll("input[type=checkbox]")[0];
+  let editButton = taskListItem.querySelectorAll("button.js-edit")[0];
+  let deleteButton = taskListItem.querySelectorAll("button.js-delete")[0];
   editButton.onclick = editTask;
   deleteButton.onclick = deleteTask;
   checkBox.onchange = checkBoxEventHandler;
 };
 
-addButton.addEventListener("click", addTask);
+addTaskButton.addEventListener("click", addTask);
 
-for (var i = 0; i < incompleteTasksHolder.children.length; i++) {
+taskInput.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    addTask();
+  }
+});
+
+function displayMessage (textString, type) {
+  // Currently the only suported types are "success" and "error"
+  // If other type is used the notification will have a generic style
+  let delay = 3000;
+  let notification = appHolder.querySelector(".notification") || document.createElement("div");
+
+  notification.className = "";
+  notification.classList.add("notification", "notification--"+type);
+  notification.innerText = textString;
+
+  appHolder.appendChild(notification);
+
+  setTimeout(() => {
+    notification.classList.add("fade-out");
+  }, delay);
+
+  setTimeout(() => {
+    notification.remove()
+  }, delay + 30);
+}
+
+appHolder.onload = retrieveLocalData();
+
+function saveLocalData() {
+      let pendingTasks = document.getElementById("incomplete-tasks");
+      let pendingTasksContent = pendingTasks.innerHTML;
+      let finishedTasks = document.getElementById("completed-tasks");
+      let finishedTasksContent = finishedTasks.innerHTML;
+
+      localStorage.incompleteTasksContent = pendingTasksContent;
+      localStorage.finishedTasksContent = finishedTasksContent;
+
+      console.info('Data saved')
+}
+
+function retrieveLocalData() {
+  let pendingTasks = document.getElementById("incomplete-tasks");
+  let finishedTasks = document.getElementById("completed-tasks");
+
+  if (localStorage.pendingTasksContent !== undefined || localStorage.pendingTasksContent !== null) {
+    pendingTasks.innerHTML = localStorage.incompleteTasksContent;
+  } else {
+    pendingTasks.innerHTML = '';
+  }
+
+  if (localStorage.finishedTasksContent !== undefined || localStorage.finishedTasksContent !== null) {
+    finishedTasks.innerHTML = localStorage.finishedTasksContent;
+  } else {
+    finishedTasks.innerHTML = '';
+  }
+}
+
+for (let i = 0; i < incompleteTasksHolder.children.length; i++) {
   bindTaskEvents(incompleteTasksHolder.children[i], taskCompleted);
 }
 
-for (var i = 0; i < completedTasksHolder.children.length; i++) {
+for (let i = 0; i < completedTasksHolder.children.length; i++) {
   bindTaskEvents(completedTasksHolder.children[i], taskIncomplete);
 }
+
