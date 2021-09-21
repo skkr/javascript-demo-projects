@@ -62,6 +62,13 @@ function editTask () {
       saveLocalData();
     }, 200);
   } else {
+    editInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        button.focus();
+      }
+    });
+
     editInput.value = label.innerText
     button.innerText = "Save";
   }
